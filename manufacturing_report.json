@@ -1,0 +1,176 @@
+{
+  "report_title": "AutoParts Inc - Manufacturing Intelligence Report",
+  "generated_at": "2025-12-04T17:14:46.890994",
+  "facility": "AutoParts Inc - Main Production Facility",
+  "executive_summary": {
+    "quality_status": "GOOD - Within acceptable range",
+    "maintenance_status": "HEALTHY - All machines operating normally",
+    "schedule_status": "STABLE - Schedule operating efficiently",
+    "total_machines": 5,
+    "operational_machines": 3,
+    "average_efficiency": 89.0,
+    "overall_health_score": 87.8
+  },
+  "quality_analysis": {
+    "timestamp": "2025-12-04T17:14:46.386578",
+    "overall_defect_rate": 2.0080321285140563,
+    "defects_by_component": {
+      "Engine Block": {
+        "produced": 125,
+        "defects": 3,
+        "defect_rate": "2.40%"
+      },
+      "Transmission Gear": {
+        "produced": 280,
+        "defects": 8,
+        "defect_rate": "2.86%"
+      },
+      "Brake Rotor": {
+        "produced": 342,
+        "defects": 4,
+        "defect_rate": "1.17%"
+      }
+    },
+    "defects_by_production_line": {},
+    "patterns": [
+      "Transmission Gear has the highest defect rate at 2.86%"
+    ],
+    "recommendations": []
+  },
+  "machine_health_analysis": {
+    "machine_analysis": [
+      {
+        "machine_id": "M001",
+        "machine_name": "CNC Mill A",
+        "failure_probability": 36.6,
+        "urgency_level": "MODERATE",
+        "recommended_action": "Schedule preventive maintenance within next maintenance window",
+        "maintenance_timeframe": "14-30 days",
+        "risk_factors": [
+          "Elevated temperature (94.4\u00b0C)",
+          "Extended runtime (6582 hours)"
+        ],
+        "health_score": 63.376
+      },
+      {
+        "machine_id": "M002",
+        "machine_name": "CNC Mill B",
+        "failure_probability": 19.8,
+        "urgency_level": "LOW",
+        "recommended_action": "Continue normal operations with routine monitoring",
+        "maintenance_timeframe": "30+ days",
+        "risk_factors": [
+          "Extended runtime (5287 hours)"
+        ],
+        "health_score": 80.226
+      },
+      {
+        "machine_id": "M003",
+        "machine_name": "Lathe A",
+        "failure_probability": 32.2,
+        "urgency_level": "MODERATE",
+        "recommended_action": "Schedule preventive maintenance within next maintenance window",
+        "maintenance_timeframe": "14-30 days",
+        "risk_factors": [
+          "No significant risk factors detected"
+        ],
+        "health_score": 67.83333333333333
+      },
+      {
+        "machine_id": "M004",
+        "machine_name": "Press A",
+        "failure_probability": 16.7,
+        "urgency_level": "LOW",
+        "recommended_action": "Continue normal operations with routine monitoring",
+        "maintenance_timeframe": "30+ days",
+        "risk_factors": [
+          "No significant risk factors detected"
+        ],
+        "health_score": 83.32833333333333
+      },
+      {
+        "machine_id": "M005",
+        "machine_name": "Welder A",
+        "failure_probability": 29.5,
+        "urgency_level": "MODERATE",
+        "recommended_action": "Schedule preventive maintenance within next maintenance window",
+        "maintenance_timeframe": "14-30 days",
+        "risk_factors": [
+          "Elevated temperature (90.4\u00b0C)"
+        ],
+        "health_score": 70.515
+      }
+    ],
+    "maintenance_recommendations": [],
+    "summary": {
+      "total_machines": 5,
+      "machines_requiring_maintenance": 0,
+      "overall_health_score": 73.05573333333334
+    }
+  },
+  "schedule_optimization": {
+    "current_efficiency": "53.78%",
+    "optimized_efficiency": "58.51%",
+    "efficiency_improvement": "8.79%",
+    "custom_order_analysis": {
+      "total_custom_orders": 2,
+      "pending_orders": 1,
+      "in_progress_orders": 1,
+      "urgent_orders": 0,
+      "total_estimated_revenue": 59925,
+      "order_details": [
+        {
+          "custom_order_id": "CUST8584",
+          "customer_name": "Premium Auto Corp",
+          "product_type": "Custom Engine Block",
+          "deadline": "2025-12-30",
+          "days_until_deadline": 25,
+          "is_urgent": false,
+          "status": "pending"
+        },
+        {
+          "custom_order_id": "CUST2683",
+          "customer_name": "Custom Auto Works",
+          "product_type": "Custom Suspension Part",
+          "deadline": "2025-12-31",
+          "days_until_deadline": 26,
+          "is_urgent": false,
+          "status": "in-progress"
+        }
+      ]
+    },
+    "machine_utilization": {
+      "M001": 2.825,
+      "M002": 14.374999999999998,
+      "M003": 0.0,
+      "M004": 9.4875,
+      "M005": 39.77499999999999
+    },
+    "recommendations": [
+      "Schedule optimization can improve efficiency by 8.79%"
+    ],
+    "optimized_schedule_summary": {
+      "total_orders": 5,
+      "high_priority_orders": 1,
+      "estimated_completion_time": "2025-12-31"
+    }
+  },
+  "action_items": [
+    {
+      "category": "Production Schedule",
+      "priority": "MEDIUM",
+      "action": "Schedule optimization can improve efficiency by 8.79%",
+      "assigned_to": "Production Planning Team",
+      "deadline": "Within 14 days"
+    }
+  ],
+  "simulation_metadata": {
+    "agents_used": [
+      "Autonomous Quality Inspector",
+      "Predictive Maintenance Agent",
+      "Production Orchestration Agent"
+    ],
+    "data_points_generated": 13,
+    "simulation_duration": "Instant (simulated)"
+  }
+}

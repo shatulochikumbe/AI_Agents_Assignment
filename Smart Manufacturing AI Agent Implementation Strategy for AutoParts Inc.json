@@ -1,0 +1,348 @@
+{
+  "name": "Smart Manufacturing AI Agent Implementation Strategy for AutoParts Inc",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "3185f158-a7a9-4e29-97cf-66d08ab50712",
+      "name": "Production Monitoring Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -416,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "defectThreshold",
+              "value": 0.15,
+              "type": "number"
+            },
+            {
+              "id": "id-2",
+              "name": "maintenanceAlertThreshold",
+              "value": 0.7,
+              "type": "number"
+            },
+            {
+              "id": "id-3",
+              "name": "productionTargetEfficiency",
+              "value": 0.85,
+              "type": "number"
+            },
+            {
+              "id": "id-4",
+              "name": "customizationLeadTimeDays",
+              "value": 5,
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "58b22a68-93fd-4967-8b79-6c0a60b53609",
+      "name": "Workflow Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -192,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simulate realistic production data for AutoParts Inc\n\n// Helper function to generate random number in range\nfunction randomInRange(min, max) {\n  return Math.random() * (max - min) + min;\n}\n\n// Helper function to generate random integer in range\nfunction randomInt(min, max) {\n  return Math.floor(Math.random() * (max - min + 1)) + min;\n}\n\n// Generate machine metrics data\nconst machines = [\n  { id: 'M001', name: 'CNC Mill A', type: 'Milling' },\n  { id: 'M002', name: 'CNC Mill B', type: 'Milling' },\n  { id: 'M003', name: 'Lathe A', type: 'Turning' },\n  { id: 'M004', name: 'Press A', type: 'Stamping' },\n  { id: 'M005', name: 'Welder A', type: 'Welding' }\n];\n\nconst machineMetrics = machines.map(machine => ({\n  machineId: machine.id,\n  machineName: machine.name,\n  machineType: machine.type,\n  temperature: randomInRange(65, 95).toFixed(1),\n  vibration: randomInRange(0.5, 3.5).toFixed(2),\n  powerConsumption: randomInRange(15, 45).toFixed(1),\n  runningHours: randomInt(1200, 8500),\n  lastMaintenance: new Date(Date.now() - randomInt(1, 90) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n  efficiency: randomInRange(75, 98).toFixed(1),\n  status: Math.random() > 0.15 ? 'operational' : 'warning'\n}));\n\n// Generate quality measurements\nconst qualityMetrics = [\n  {\n    batchId: 'B' + randomInt(1000, 9999),\n    productType: 'Engine Block',\n    inspectionDate: new Date().toISOString().split('T')[0],\n    defectRate: randomInRange(0.5, 4.5).toFixed(2),\n    dimensionalAccuracy: randomInRange(96, 99.9).toFixed(2),\n    surfaceFinish: randomInRange(85, 99).toFixed(1),\n    totalUnitsInspected: randomInt(100, 500),\n    defectsFound: randomInt(1, 15),\n    defectTypes: ['surface scratches', 'dimensional variance', 'material defects'].slice(0, randomInt(1, 3))\n  },\n  {\n    batchId: 'B' + randomInt(1000, 9999),\n    productType: 'Transmission Gear',\n    inspectionDate: new Date().toISOString().split('T')[0],\n    defectRate: randomInRange(0.5, 4.5).toFixed(2),\n    dimensionalAccuracy: randomInRange(96, 99.9).toFixed(2),\n    surfaceFinish: randomInRange(85, 99).toFixed(1),\n    totalUnitsInspected: randomInt(100, 500),\n    defectsFound: randomInt(1, 15),\n    defectTypes: ['tooth alignment', 'hardness variance'].slice(0, randomInt(1, 2))\n  },\n  {\n    batchId: 'B' + randomInt(1000, 9999),\n    productType: 'Brake Rotor',\n    inspectionDate: new Date().toISOString().split('T')[0],\n    defectRate: randomInRange(0.5, 4.5).toFixed(2),\n    dimensionalAccuracy: randomInRange(96, 99.9).toFixed(2),\n    surfaceFinish: randomInRange(85, 99).toFixed(1),\n    totalUnitsInspected: randomInt(100, 500),\n    defectsFound: randomInt(1, 15),\n    defectTypes: ['surface porosity', 'thickness variance']\n  }\n];\n\n// Generate production schedules\nconst productionSchedule = [\n  {\n    orderId: 'ORD' + randomInt(10000, 99999),\n    productType: 'Engine Block',\n    quantity: randomInt(500, 2000),\n    scheduledStart: new Date(Date.now() + randomInt(1, 7) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n    scheduledEnd: new Date(Date.now() + randomInt(8, 21) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n    priority: Math.random() > 0.7 ? 'high' : 'normal',\n    assignedMachines: ['M001', 'M002'],\n    currentProgress: randomInt(0, 85)\n  },\n  {\n    orderId: 'ORD' + randomInt(10000, 99999),\n    productType: 'Transmission Gear',\n    quantity: randomInt(1000, 3000),\n    scheduledStart: new Date(Date.now() + randomInt(1, 7) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n    scheduledEnd: new Date(Date.now() + randomInt(8, 21) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n    priority: Math.random() > 0.7 ? 'high' : 'normal',\n    assignedMachines: ['M003'],\n    currentProgress: randomInt(0, 85)\n  },\n  {\n    orderId: 'ORD' + randomInt(10000, 99999),\n    productType: 'Brake Rotor',\n    quantity: randomInt(800, 2500),\n    scheduledStart: new Date(Date.now() + randomInt(1, 7) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n    scheduledEnd: new Date(Date.now() + randomInt(8, 21) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n    priority: Math.random() > 0.7 ? 'high' : 'normal',\n    assignedMachines: ['M004', 'M005'],\n    currentProgress: randomInt(0, 85)\n  }\n];\n\n// Generate custom orders\nconst customOrders = [\n  {\n    customOrderId: 'CUST' + randomInt(1000, 9999),\n    customerName: 'Premium Auto Corp',\n    productType: 'Custom Engine Block',\n    specifications: {\n      material: 'Aluminum Alloy 7075',\n      tolerance: '±0.001 inches',\n      surfaceFinish: 'Ra 0.8 μm',\n      specialRequirements: 'Heat treated, anodized finish'\n    },\n    quantity: randomInt(50, 300),\n    deadline: new Date(Date.now() + randomInt(14, 45) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n    status: 'pending',\n    estimatedCost: randomInt(15000, 50000)\n  },\n  {\n    customOrderId: 'CUST' + randomInt(1000, 9999),\n    customerName: 'Elite Motors Ltd',\n    productType: 'Custom Transmission Housing',\n    specifications: {\n      material: 'Cast Iron Grade 60',\n      tolerance: '±0.002 inches',\n      surfaceFinish: 'Ra 1.6 μm',\n      specialRequirements: 'Pressure tested, coated'\n    },\n    quantity: randomInt(50, 300),\n    deadline: new Date(Date.now() + randomInt(14, 45) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n    status: 'in-progress',\n    estimatedCost: randomInt(15000, 50000)\n  }\n];\n\n// Combine all data into a single output\nconst productionData = {\n  timestamp: new Date().toISOString(),\n  facility: 'AutoParts Inc - Main Production Facility',\n  machineMetrics: machineMetrics,\n  qualityMetrics: qualityMetrics,\n  productionSchedule: productionSchedule,\n  customOrders: customOrders,\n  summary: {\n    totalMachines: machines.length,\n    operationalMachines: machineMetrics.filter(m => m.status === 'operational').length,\n    averageEfficiency: (machineMetrics.reduce((sum, m) => sum + parseFloat(m.efficiency), 0) / machines.length).toFixed(1),\n    totalActiveOrders: productionSchedule.length,\n    totalCustomOrders: customOrders.length,\n    averageDefectRate: (qualityMetrics.reduce((sum, q) => sum + parseFloat(q.defectRate), 0) / qualityMetrics.length).toFixed(2)\n  }\n};\n\nreturn [{ json: productionData }];"
+      },
+      "id": "be2a25de-d37d-43a5-92e7-0de140bf6438",
+      "name": "Simulate Production Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        32,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Analyzes quality data to calculate defect rates, identify patterns, and classify defect types",
+        "jsCode": "// Defect Analysis Tool - Analyzes quality data to calculate defect rates and identify patterns\n\n// Parse the incoming query to extract production metrics\nconst productionData = typeof query === 'string' ? JSON.parse(query) : query;\n\n// Initialize analysis results\nconst analysis = {\n  overallDefectRate: 0,\n  defectsByComponent: {},\n  defectsByProductionLine: {},\n  defectsByTimePeriod: {},\n  patterns: [],\n  recommendations: []\n};\n\n// Calculate overall defect rate\nif (productionData.totalUnits && productionData.defectiveUnits) {\n  analysis.overallDefectRate = ((productionData.defectiveUnits / productionData.totalUnits) * 100).toFixed(2);\n}\n\n// Analyze defects by component type\nif (productionData.componentData) {\n  for (const component of productionData.componentData) {\n    const defectRate = ((component.defects / component.produced) * 100).toFixed(2);\n    analysis.defectsByComponent[component.type] = {\n      produced: component.produced,\n      defects: component.defects,\n      defectRate: defectRate + '%',\n      commonIssues: component.issues || []\n    };\n  }\n}\n\n// Analyze defects by production line\nif (productionData.productionLines) {\n  for (const line of productionData.productionLines) {\n    const defectRate = ((line.defects / line.output) * 100).toFixed(2);\n    analysis.defectsByProductionLine[line.name] = {\n      output: line.output,\n      defects: line.defects,\n      defectRate: defectRate + '%',\n      efficiency: line.efficiency || 'N/A'\n    };\n  }\n}\n\n// Identify patterns\nif (analysis.overallDefectRate > 5) {\n  analysis.patterns.push('High overall defect rate detected - exceeds 5% threshold');\n}\n\n// Find component with highest defect rate\nlet highestDefectComponent = null;\nlet highestRate = 0;\nfor (const [component, data] of Object.entries(analysis.defectsByComponent)) {\n  const rate = parseFloat(data.defectRate);\n  if (rate > highestRate) {\n    highestRate = rate;\n    highestDefectComponent = component;\n  }\n}\n\nif (highestDefectComponent) {\n  analysis.patterns.push(`${highestDefectComponent} has the highest defect rate at ${highestRate}%`);\n}\n\n// Generate recommendations\nif (analysis.overallDefectRate > 5) {\n  analysis.recommendations.push('Implement immediate quality control review');\n  analysis.recommendations.push('Increase inspection frequency on high-defect components');\n}\n\nif (highestRate > 10) {\n  analysis.recommendations.push(`Focus on ${highestDefectComponent} - consider process review and operator training`);\n}\n\n// Return structured analysis as JSON string\nreturn JSON.stringify(analysis, null, 2);"
+      },
+      "id": "2d666e61-d7be-4922-8db0-19a664513cb3",
+      "name": "Defect Analysis Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        -416,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Predicts machine failure probability based on operational metrics using statistical analysis",
+        "jsCode": "// Machine Health Predictor Tool\n// Analyzes machine health metrics and calculates failure probability\n\n// Parse the input query to extract machine metrics\nconst metrics = typeof query === 'string' ? JSON.parse(query) : query;\n\n// Extract metrics with defaults\nconst vibration = metrics.vibration || 0;\nconst temperature = metrics.temperature || 0;\nconst runtimeHours = metrics.runtimeHours || 0;\nconst errorCounts = metrics.errorCounts || 0;\nconst machineId = metrics.machineId || 'Unknown';\n\n// Define thresholds for health scoring\nconst thresholds = {\n  vibration: { normal: 2.5, warning: 5.0, critical: 7.5 },\n  temperature: { normal: 70, warning: 85, critical: 95 },\n  runtimeHours: { normal: 2000, warning: 5000, critical: 8000 },\n  errorCounts: { normal: 5, warning: 15, critical: 30 }\n};\n\n// Calculate individual risk scores (0-100)\nfunction calculateRiskScore(value, threshold) {\n  if (value <= threshold.normal) return 0;\n  if (value <= threshold.warning) return 25 + ((value - threshold.normal) / (threshold.warning - threshold.normal)) * 25;\n  if (value <= threshold.critical) return 50 + ((value - threshold.warning) / (threshold.critical - threshold.warning)) * 30;\n  return 80 + Math.min(20, ((value - threshold.critical) / threshold.critical) * 20);\n}\n\nconst vibrationRisk = calculateRiskScore(vibration, thresholds.vibration);\nconst temperatureRisk = calculateRiskScore(temperature, thresholds.temperature);\nconst runtimeRisk = calculateRiskScore(runtimeHours, thresholds.runtimeHours);\nconst errorRisk = calculateRiskScore(errorCounts, thresholds.errorCounts);\n\n// Calculate weighted failure probability\nconst failureProbability = (\n  vibrationRisk * 0.35 +\n  temperatureRisk * 0.30 +\n  runtimeRisk * 0.20 +\n  errorRisk * 0.15\n);\n\n// Determine maintenance urgency level\nlet urgencyLevel, recommendedAction, timeframe;\n\nif (failureProbability < 25) {\n  urgencyLevel = 'LOW';\n  recommendedAction = 'Continue normal operations with routine monitoring';\n  timeframe = '30+ days';\n} else if (failureProbability < 50) {\n  urgencyLevel = 'MODERATE';\n  recommendedAction = 'Schedule preventive maintenance within next maintenance window';\n  timeframe = '14-30 days';\n} else if (failureProbability < 75) {\n  urgencyLevel = 'HIGH';\n  recommendedAction = 'Prioritize maintenance - schedule within next week';\n  timeframe = '3-7 days';\n} else {\n  urgencyLevel = 'CRITICAL';\n  recommendedAction = 'IMMEDIATE maintenance required - risk of imminent failure';\n  timeframe = '0-2 days';\n}\n\n// Identify primary risk factors\nconst riskFactors = [];\nif (vibrationRisk > 50) riskFactors.push(`High vibration (${vibration.toFixed(2)} mm/s)`);\nif (temperatureRisk > 50) riskFactors.push(`Elevated temperature (${temperature.toFixed(1)}°C)`);\nif (runtimeRisk > 50) riskFactors.push(`Extended runtime (${runtimeHours.toFixed(0)} hours)`);\nif (errorRisk > 50) riskFactors.push(`Frequent errors (${errorCounts} occurrences)`);\n\n// Build comprehensive analysis report\nconst report = {\n  machineId: machineId,\n  failureProbability: Math.round(failureProbability * 10) / 10,\n  urgencyLevel: urgencyLevel,\n  recommendedAction: recommendedAction,\n  maintenanceTimeframe: timeframe,\n  metrics: {\n    vibration: { value: vibration, risk: Math.round(vibrationRisk), unit: 'mm/s' },\n    temperature: { value: temperature, risk: Math.round(temperatureRisk), unit: '°C' },\n    runtimeHours: { value: runtimeHours, risk: Math.round(runtimeRisk), unit: 'hours' },\n    errorCounts: { value: errorCounts, risk: Math.round(errorRisk), unit: 'count' }\n  },\n  primaryRiskFactors: riskFactors.length > 0 ? riskFactors : ['No significant risk factors detected'],\n  timestamp: new Date().toISOString()\n};\n\n// Return formatted analysis\nreturn JSON.stringify(report, null, 2);"
+      },
+      "id": "22233c0f-65a9-45e6-a79f-cc706834f674",
+      "name": "Machine Health Predictor Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        -416,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Optimizes production schedules to maximize efficiency while accommodating custom orders",
+        "jsCode": "// Schedule Optimizer Tool - Analyzes production schedules and recommends optimizations\n\n// Parse the input query (expecting production schedule data)\nconst scheduleData = typeof query === 'string' ? JSON.parse(query) : query;\n\n// Extract schedule information\nconst { orders = [], machines = [], currentSchedule = [] } = scheduleData;\n\n// Calculate efficiency metrics\nfunction calculateEfficiency(schedule) {\n  let totalSetupTime = 0;\n  let totalProductionTime = 0;\n  let machineUtilization = {};\n  \n  schedule.forEach((task, index) => {\n    // Calculate setup time (higher when switching between different product types)\n    if (index > 0 && schedule[index - 1].productType !== task.productType) {\n      totalSetupTime += 30; // 30 minutes setup time for product type change\n    }\n    \n    totalProductionTime += task.duration || 60;\n    \n    // Track machine utilization\n    if (!machineUtilization[task.machine]) {\n      machineUtilization[task.machine] = 0;\n    }\n    machineUtilization[task.machine] += task.duration || 60;\n  });\n  \n  return {\n    totalSetupTime,\n    totalProductionTime,\n    totalTime: totalSetupTime + totalProductionTime,\n    machineUtilization,\n    efficiency: totalProductionTime / (totalSetupTime + totalProductionTime)\n  };\n}\n\n// Optimize schedule by grouping similar product types\nfunction optimizeSchedule(orders) {\n  // Group orders by product type to minimize setup time\n  const grouped = orders.reduce((acc, order) => {\n    const type = order.productType || 'standard';\n    if (!acc[type]) acc[type] = [];\n    acc[type].push(order);\n    return acc;\n  }, {});\n  \n  // Create optimized sequence\n  const optimized = [];\n  Object.keys(grouped).forEach(type => {\n    // Sort by priority and deadline within each group\n    grouped[type].sort((a, b) => {\n      if (a.priority !== b.priority) return b.priority - a.priority;\n      return new Date(a.deadline) - new Date(b.deadline);\n    });\n    optimized.push(...grouped[type]);\n  });\n  \n  return optimized;\n}\n\n// Calculate current and optimized metrics\nconst currentMetrics = calculateEfficiency(currentSchedule);\nconst optimizedSchedule = optimizeSchedule(orders);\nconst optimizedMetrics = calculateEfficiency(optimizedSchedule);\n\n// Calculate improvement\nconst efficiencyImprovement = ((optimizedMetrics.efficiency - currentMetrics.efficiency) / currentMetrics.efficiency * 100).toFixed(2);\nconst timeSaved = currentMetrics.totalTime - optimizedMetrics.totalTime;\n\n// Generate recommendations\nconst recommendations = [];\n\nif (timeSaved > 0) {\n  recommendations.push(`Resequence orders by product type to save ${timeSaved} minutes`);\n}\n\nif (efficiencyImprovement > 0) {\n  recommendations.push(`Efficiency can be improved by ${efficiencyImprovement}%`);\n}\n\n// Check for machine bottlenecks\nconst avgUtilization = Object.values(optimizedMetrics.machineUtilization).reduce((a, b) => a + b, 0) / Object.keys(optimizedMetrics.machineUtilization).length;\nObject.entries(optimizedMetrics.machineUtilization).forEach(([machine, utilization]) => {\n  if (utilization > avgUtilization * 1.3) {\n    recommendations.push(`Machine ${machine} is overutilized - consider load balancing`);\n  }\n});\n\n// Format the response\nconst response = {\n  analysis: {\n    currentEfficiency: (currentMetrics.efficiency * 100).toFixed(2) + '%',\n    optimizedEfficiency: (optimizedMetrics.efficiency * 100).toFixed(2) + '%',\n    efficiencyImprovement: efficiencyImprovement + '%',\n    timeSaved: timeSaved + ' minutes',\n    setupTimeReduction: (currentMetrics.totalSetupTime - optimizedMetrics.totalSetupTime) + ' minutes'\n  },\n  recommendations: recommendations,\n  optimizedSequence: optimizedSchedule.map((order, index) => ({\n    position: index + 1,\n    orderId: order.orderId || order.id,\n    productType: order.productType,\n    priority: order.priority,\n    estimatedDuration: order.duration || 60\n  })),\n  machineUtilization: optimizedMetrics.machineUtilization\n};\n\nreturn JSON.stringify(response, null, 2);"
+      },
+      "id": "2fa60326-269f-40d6-a954-da4ce5305a8f",
+      "name": "Schedule Optimizer Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        -416,
+        1072
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "reportTitle",
+              "value": "={{ $json.reportTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "generatedAt",
+              "value": "={{ $json.generatedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "facility",
+              "value": "={{ $json.facility }}",
+              "type": "string"
+            },
+            {
+              "id": "id-4",
+              "name": "executiveSummary",
+              "value": "={{ JSON.stringify($json.executiveSummary, null, 2) }}",
+              "type": "string"
+            },
+            {
+              "id": "id-5",
+              "name": "qualityStatus",
+              "value": "={{ $json.executiveSummary.qualityStatus }}",
+              "type": "string"
+            },
+            {
+              "id": "id-6",
+              "name": "maintenanceStatus",
+              "value": "={{ $json.executiveSummary.maintenanceStatus }}",
+              "type": "string"
+            },
+            {
+              "id": "id-7",
+              "name": "scheduleStatus",
+              "value": "={{ $json.executiveSummary.scheduleStatus }}",
+              "type": "string"
+            },
+            {
+              "id": "id-8",
+              "name": "actionItemsCount",
+              "value": "={{ $json.actionItems.length }}",
+              "type": "number"
+            },
+            {
+              "id": "id-9",
+              "name": "fullReport",
+              "value": "={{ JSON.stringify($json, null, 2) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "265f06be-b1e5-40e4-b844-8dadfa0b0d39",
+      "name": "Format Final Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        704,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Quality Analysis - Analyzes quality metrics and generates quality control report\n\nconst productionData = $input.first().json;\nconst config = $('Workflow Configuration').first().json;\n\n// Extract quality metrics\nconst qualityMetrics = productionData.qualityMetrics || [];\nconst defectThreshold = config.defectThreshold || 0.15;\n\n// Initialize analysis results\nconst qualityAnalysis = {\n  timestamp: new Date().toISOString(),\n  overallQualityScore: 0,\n  defectAnalysis: [],\n  alerts: [],\n  recommendations: []\n};\n\n// Analyze each batch\nlet totalDefectRate = 0;\nlet batchesAboveThreshold = 0;\n\nqualityMetrics.forEach(batch => {\n  const defectRate = parseFloat(batch.defectRate) / 100;\n  totalDefectRate += defectRate;\n  \n  const batchAnalysis = {\n    batchId: batch.batchId,\n    productType: batch.productType,\n    defectRate: batch.defectRate + '%',\n    dimensionalAccuracy: batch.dimensionalAccuracy + '%',\n    surfaceFinish: batch.surfaceFinish + '%',\n    totalUnitsInspected: batch.totalUnitsInspected,\n    defectsFound: batch.defectsFound,\n    defectTypes: batch.defectTypes,\n    status: defectRate > defectThreshold ? 'ALERT' : 'NORMAL'\n  };\n  \n  qualityAnalysis.defectAnalysis.push(batchAnalysis);\n  \n  // Check if above threshold\n  if (defectRate > defectThreshold) {\n    batchesAboveThreshold++;\n    qualityAnalysis.alerts.push({\n      severity: 'HIGH',\n      batchId: batch.batchId,\n      productType: batch.productType,\n      message: `Defect rate ${batch.defectRate}% exceeds threshold of ${(defectThreshold * 100).toFixed(1)}%`,\n      defectTypes: batch.defectTypes\n    });\n  }\n  \n  // Check dimensional accuracy\n  if (parseFloat(batch.dimensionalAccuracy) < 98) {\n    qualityAnalysis.alerts.push({\n      severity: 'MEDIUM',\n      batchId: batch.batchId,\n      productType: batch.productType,\n      message: `Dimensional accuracy ${batch.dimensionalAccuracy}% below target of 98%`\n    });\n  }\n});\n\n// Calculate overall quality score\nconst avgDefectRate = totalDefectRate / qualityMetrics.length;\nqualityAnalysis.overallQualityScore = ((1 - avgDefectRate) * 100).toFixed(2);\nqualityAnalysis.averageDefectRate = (avgDefectRate * 100).toFixed(2) + '%';\nqualityAnalysis.batchesAnalyzed = qualityMetrics.length;\nqualityAnalysis.batchesAboveThreshold = batchesAboveThreshold;\n\n// Generate recommendations\nif (batchesAboveThreshold > 0) {\n  qualityAnalysis.recommendations.push('Implement immediate quality control review for batches exceeding defect threshold');\n  qualityAnalysis.recommendations.push('Increase inspection frequency on affected product types');\n}\n\nif (avgDefectRate > defectThreshold) {\n  qualityAnalysis.recommendations.push('Overall defect rate exceeds threshold - review production processes');\n  qualityAnalysis.recommendations.push('Consider operator training and equipment calibration');\n}\n\n// Identify most common defect types\nconst defectTypeCounts = {};\nqualityMetrics.forEach(batch => {\n  batch.defectTypes.forEach(type => {\n    defectTypeCounts[type] = (defectTypeCounts[type] || 0) + 1;\n  });\n});\n\nconst topDefects = Object.entries(defectTypeCounts)\n  .sort((a, b) => b[1] - a[1])\n  .slice(0, 3)\n  .map(([type, count]) => ({ type, occurrences: count }));\n\nqualityAnalysis.topDefectTypes = topDefects;\n\nif (topDefects.length > 0) {\n  qualityAnalysis.recommendations.push(`Focus on reducing ${topDefects[0].type} - most common defect type`);\n}\n\nreturn [{ json: { qualityAnalysis } }];"
+      },
+      "id": "5f935b60-5b43-4a56-bc8e-eb4d35faa3ac",
+      "name": "Run Quality Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Run Machine Health Analysis\n// Analyzes machine metrics from production data and predicts maintenance needs\n\nconst productionData = $input.first().json;\nconst config = $('Workflow Configuration').first().json;\n\n// Extract machine metrics\nconst machineMetrics = productionData.machineMetrics || [];\n\n// Initialize analysis results\nconst machineHealthAnalysis = {\n  timestamp: new Date().toISOString(),\n  totalMachines: machineMetrics.length,\n  machinesAnalyzed: 0,\n  criticalMachines: [],\n  warningMachines: [],\n  healthyMachines: [],\n  maintenanceRecommendations: [],\n  overallHealthScore: 0\n};\n\n// Define health thresholds\nconst thresholds = {\n  vibration: { normal: 2.5, warning: 5.0, critical: 7.5 },\n  temperature: { normal: 70, warning: 85, critical: 95 },\n  runningHours: { normal: 2000, warning: 5000, critical: 8000 },\n  efficiency: { normal: 85, warning: 75, critical: 65 }\n};\n\n// Function to calculate health score for a machine\nfunction calculateHealthScore(machine) {\n  let score = 100;\n  const issues = [];\n  \n  // Check vibration\n  const vibration = parseFloat(machine.vibration);\n  if (vibration > thresholds.vibration.critical) {\n    score -= 30;\n    issues.push(`Critical vibration: ${vibration} mm/s`);\n  } else if (vibration > thresholds.vibration.warning) {\n    score -= 15;\n    issues.push(`High vibration: ${vibration} mm/s`);\n  }\n  \n  // Check temperature\n  const temperature = parseFloat(machine.temperature);\n  if (temperature > thresholds.temperature.critical) {\n    score -= 25;\n    issues.push(`Critical temperature: ${temperature}°C`);\n  } else if (temperature > thresholds.temperature.warning) {\n    score -= 12;\n    issues.push(`Elevated temperature: ${temperature}°C`);\n  }\n  \n  // Check running hours\n  const runningHours = machine.runningHours;\n  if (runningHours > thresholds.runningHours.critical) {\n    score -= 20;\n    issues.push(`High runtime: ${runningHours} hours`);\n  } else if (runningHours > thresholds.runningHours.warning) {\n    score -= 10;\n    issues.push(`Extended runtime: ${runningHours} hours`);\n  }\n  \n  // Check efficiency\n  const efficiency = parseFloat(machine.efficiency);\n  if (efficiency < thresholds.efficiency.critical) {\n    score -= 25;\n    issues.push(`Low efficiency: ${efficiency}%`);\n  } else if (efficiency < thresholds.efficiency.warning) {\n    score -= 12;\n    issues.push(`Below target efficiency: ${efficiency}%`);\n  }\n  \n  return { score: Math.max(0, score), issues };\n}\n\n// Analyze each machine\nfor (const machine of machineMetrics) {\n  machineHealthAnalysis.machinesAnalyzed++;\n  \n  const healthResult = calculateHealthScore(machine);\n  const healthScore = healthResult.score;\n  \n  const machineReport = {\n    machineId: machine.machineId,\n    machineName: machine.machineName,\n    machineType: machine.machineType,\n    healthScore: healthScore,\n    status: machine.status,\n    metrics: {\n      vibration: parseFloat(machine.vibration),\n      temperature: parseFloat(machine.temperature),\n      runningHours: machine.runningHours,\n      efficiency: parseFloat(machine.efficiency),\n      powerConsumption: parseFloat(machine.powerConsumption)\n    },\n    issues: healthResult.issues,\n    lastMaintenance: machine.lastMaintenance\n  };\n  \n  // Categorize machine by health status\n  if (healthScore < 50) {\n    machineReport.priority = 'CRITICAL';\n    machineReport.recommendation = 'Immediate maintenance required - schedule within 24-48 hours';\n    machineHealthAnalysis.criticalMachines.push(machineReport);\n    machineHealthAnalysis.maintenanceRecommendations.push({\n      machineId: machine.machineId,\n      machineName: machine.machineName,\n      priority: 'CRITICAL',\n      action: 'Immediate inspection and maintenance',\n      timeframe: '24-48 hours',\n      reason: healthResult.issues.join(', ')\n    });\n  } else if (healthScore < 75) {\n    machineReport.priority = 'WARNING';\n    machineReport.recommendation = 'Schedule preventive maintenance within 1-2 weeks';\n    machineHealthAnalysis.warningMachines.push(machineReport);\n    machineHealthAnalysis.maintenanceRecommendations.push({\n      machineId: machine.machineId,\n      machineName: machine.machineName,\n      priority: 'WARNING',\n      action: 'Preventive maintenance recommended',\n      timeframe: '1-2 weeks',\n      reason: healthResult.issues.join(', ')\n    });\n  } else {\n    machineReport.priority = 'HEALTHY';\n    machineReport.recommendation = 'Continue routine monitoring';\n    machineHealthAnalysis.healthyMachines.push(machineReport);\n  }\n}\n\n// Calculate overall health score\nif (machineHealthAnalysis.machinesAnalyzed > 0) {\n  const totalScore = [...machineHealthAnalysis.criticalMachines, ...machineHealthAnalysis.warningMachines, ...machineHealthAnalysis.healthyMachines]\n    .reduce((sum, m) => sum + m.healthScore, 0);\n  machineHealthAnalysis.overallHealthScore = (totalScore / machineHealthAnalysis.machinesAnalyzed).toFixed(1);\n}\n\n// Add summary statistics\nmachineHealthAnalysis.summary = {\n  criticalCount: machineHealthAnalysis.criticalMachines.length,\n  warningCount: machineHealthAnalysis.warningMachines.length,\n  healthyCount: machineHealthAnalysis.healthyMachines.length,\n  maintenanceActionsRequired: machineHealthAnalysis.maintenanceRecommendations.length,\n  overallStatus: machineHealthAnalysis.criticalMachines.length > 0 ? 'CRITICAL' : \n                 machineHealthAnalysis.warningMachines.length > 0 ? 'WARNING' : 'HEALTHY'\n};\n\n// Return the analysis results\nreturn [{ json: machineHealthAnalysis }];"
+      },
+      "id": "0d62fe74-89b8-4147-bf72-b08882499c25",
+      "name": "Run Machine Health Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Run Schedule Optimization - Analyzes production schedules and custom orders\n\nconst productionData = $input.first().json;\n\n// Extract production schedule and custom orders\nconst productionSchedule = productionData.productionSchedule || [];\nconst customOrders = productionData.customOrders || [];\nconst machineMetrics = productionData.machineMetrics || [];\nconst config = $('Workflow Configuration').first().json;\n\n// Prepare data for Schedule Optimizer Tool\nconst scheduleData = {\n  orders: productionSchedule.map(order => ({\n    orderId: order.orderId,\n    productType: order.productType,\n    quantity: order.quantity,\n    scheduledStart: order.scheduledStart,\n    scheduledEnd: order.scheduledEnd,\n    priority: order.priority === 'high' ? 2 : 1,\n    deadline: order.scheduledEnd,\n    machine: order.assignedMachines[0] || 'M001',\n    duration: Math.ceil(order.quantity / 10) // Estimate duration based on quantity\n  })),\n  machines: machineMetrics.map(m => ({\n    id: m.machineId,\n    name: m.machineName,\n    type: m.machineType,\n    status: m.status,\n    efficiency: parseFloat(m.efficiency)\n  })),\n  currentSchedule: productionSchedule.map(order => ({\n    orderId: order.orderId,\n    productType: order.productType,\n    machine: order.assignedMachines[0] || 'M001',\n    duration: Math.ceil(order.quantity / 10)\n  }))\n};\n\n// Analyze custom orders\nconst customOrderAnalysis = {\n  totalCustomOrders: customOrders.length,\n  pendingOrders: customOrders.filter(o => o.status === 'pending').length,\n  inProgressOrders: customOrders.filter(o => o.status === 'in-progress').length,\n  totalEstimatedRevenue: customOrders.reduce((sum, o) => sum + o.estimatedCost, 0),\n  urgentOrders: customOrders.filter(o => {\n    const daysUntilDeadline = Math.ceil((new Date(o.deadline) - new Date()) / (1000 * 60 * 60 * 24));\n    return daysUntilDeadline <= config.customizationLeadTimeDays;\n  }),\n  orders: customOrders.map(order => {\n    const daysUntilDeadline = Math.ceil((new Date(order.deadline) - new Date()) / (1000 * 60 * 60 * 24));\n    return {\n      customOrderId: order.customOrderId,\n      customerName: order.customerName,\n      productType: order.productType,\n      quantity: order.quantity,\n      deadline: order.deadline,\n      daysUntilDeadline: daysUntilDeadline,\n      status: order.status,\n      estimatedCost: order.estimatedCost,\n      isUrgent: daysUntilDeadline <= config.customizationLeadTimeDays,\n      specifications: order.specifications\n    };\n  })\n};\n\n// Calculate schedule efficiency metrics\nconst scheduleMetrics = {\n  totalOrders: productionSchedule.length,\n  highPriorityOrders: productionSchedule.filter(o => o.priority === 'high').length,\n  averageProgress: productionSchedule.reduce((sum, o) => sum + o.currentProgress, 0) / productionSchedule.length,\n  machineUtilization: machineMetrics.reduce((acc, m) => {\n    const assignedOrders = productionSchedule.filter(o => o.assignedMachines.includes(m.machineId));\n    acc[m.machineId] = {\n      machineName: m.machineName,\n      assignedOrders: assignedOrders.length,\n      efficiency: parseFloat(m.efficiency),\n      status: m.status\n    };\n    return acc;\n  }, {})\n};\n\n// Identify scheduling conflicts and opportunities\nconst insights = [];\n\nif (customOrderAnalysis.urgentOrders.length > 0) {\n  insights.push(`${customOrderAnalysis.urgentOrders.length} custom order(s) approaching deadline - prioritize scheduling`);\n}\n\nif (scheduleMetrics.averageProgress < 50) {\n  insights.push('Overall production progress is below 50% - monitor closely');\n}\n\nconst overutilizedMachines = Object.entries(scheduleMetrics.machineUtilization)\n  .filter(([id, data]) => data.assignedOrders > 2)\n  .map(([id, data]) => data.machineName);\n\nif (overutilizedMachines.length > 0) {\n  insights.push(`Machines ${overutilizedMachines.join(', ')} are overutilized - consider load balancing`);\n}\n\n// Return comprehensive schedule optimization analysis\nreturn [{\n  json: {\n    analysisType: 'scheduleOptimization',\n    timestamp: new Date().toISOString(),\n    scheduleData: scheduleData,\n    scheduleMetrics: scheduleMetrics,\n    customOrderAnalysis: customOrderAnalysis,\n    insights: insights,\n    recommendations: [\n      'Group similar product types to minimize setup time',\n      'Prioritize high-priority and urgent custom orders',\n      'Balance machine workload to prevent bottlenecks',\n      'Monitor progress on orders below 50% completion'\n    ]\n  }\n}];"
+      },
+      "id": "26d847ff-7b59-48b5-b997-93b402112eee",
+      "name": "Run Schedule Optimization",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge Analysis Results - Combines quality, machine health, and schedule optimization results\n\n// Get all input items from the three analysis nodes\nconst items = $input.all();\n\n// Initialize result containers\nlet qualityAnalysis = null;\nlet machineHealthAnalysis = null;\nlet scheduleOptimization = null;\n\n// Parse results from each analysis node\nfor (const item of items) {\n  const data = item.json;\n  \n  // Identify which analysis this is based on the data structure\n  if (data.overallDefectRate !== undefined || data.defectsByComponent !== undefined) {\n    qualityAnalysis = data;\n  } else if (data.failureProbability !== undefined || data.urgencyLevel !== undefined) {\n    machineHealthAnalysis = data;\n  } else if (data.analysis !== undefined && data.optimizedSequence !== undefined) {\n    scheduleOptimization = data;\n  }\n}\n\n// Get production data from the Simulate Production Data node\nconst productionData = $('Simulate Production Data').first().json;\n\n// Build comprehensive manufacturing report\nconst report = {\n  reportTitle: 'AutoParts Inc - Manufacturing Intelligence Report',\n  generatedAt: new Date().toISOString(),\n  facility: productionData.facility || 'AutoParts Inc - Main Production Facility',\n  \n  executiveSummary: {\n    qualityStatus: qualityAnalysis ? \n      (parseFloat(qualityAnalysis.overallDefectRate) > 5 ? 'ATTENTION REQUIRED' : 'GOOD') : \n      'NOT AVAILABLE',\n    maintenanceStatus: machineHealthAnalysis ? \n      machineHealthAnalysis.urgencyLevel : \n      'NOT AVAILABLE',\n    scheduleStatus: scheduleOptimization ? \n      (parseFloat(scheduleOptimization.analysis.efficiencyImprovement) > 0 ? 'OPTIMIZATION AVAILABLE' : 'OPTIMAL') : \n      'NOT AVAILABLE',\n    totalMachines: productionData.summary?.totalMachines || 0,\n    operationalMachines: productionData.summary?.operationalMachines || 0,\n    averageEfficiency: productionData.summary?.averageEfficiency || 'N/A'\n  },\n  \n  qualityAnalysis: qualityAnalysis || { status: 'Analysis not available' },\n  \n  machineHealthAnalysis: machineHealthAnalysis || { status: 'Analysis not available' },\n  \n  scheduleOptimization: scheduleOptimization || { status: 'Analysis not available' },\n  \n  actionItems: [],\n  \n  rawData: {\n    machineMetrics: productionData.machineMetrics || [],\n    qualityMetrics: productionData.qualityMetrics || [],\n    productionSchedule: productionData.productionSchedule || [],\n    customOrders: productionData.customOrders || []\n  }\n};\n\n// Generate action items based on analysis results\nif (qualityAnalysis && qualityAnalysis.recommendations) {\n  qualityAnalysis.recommendations.forEach(rec => {\n    report.actionItems.push({\n      category: 'Quality',\n      priority: 'HIGH',\n      action: rec,\n      timestamp: new Date().toISOString()\n    });\n  });\n}\n\nif (machineHealthAnalysis && machineHealthAnalysis.urgencyLevel) {\n  report.actionItems.push({\n    category: 'Maintenance',\n    priority: machineHealthAnalysis.urgencyLevel,\n    action: machineHealthAnalysis.recommendedAction,\n    timeframe: machineHealthAnalysis.maintenanceTimeframe,\n    machineId: machineHealthAnalysis.machineId,\n    timestamp: new Date().toISOString()\n  });\n}\n\nif (scheduleOptimization && scheduleOptimization.recommendations) {\n  scheduleOptimization.recommendations.forEach(rec => {\n    report.actionItems.push({\n      category: 'Production Schedule',\n      priority: 'MEDIUM',\n      action: rec,\n      timestamp: new Date().toISOString()\n    });\n  });\n}\n\n// Sort action items by priority\nconst priorityOrder = { 'CRITICAL': 1, 'HIGH': 2, 'MEDIUM': 3, 'MODERATE': 4, 'LOW': 5 };\nreport.actionItems.sort((a, b) => {\n  return (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99);\n});\n\nreturn [{ json: report }];"
+      },
+      "id": "a79b5272-4ce3-4227-8276-62dfcd25ba76",
+      "name": "Merge Analysis Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        240
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Production Monitoring Schedule": {
+      "main": [
+        [
+          {
+            "node": "Workflow Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Configuration": {
+      "main": [
+        [
+          {
+            "node": "Simulate Production Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulate Production Data": {
+      "main": [
+        [
+          {
+            "node": "Run Quality Analysis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Run Machine Health Analysis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Run Schedule Optimization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Quality Analysis": {
+      "main": [
+        [
+          {
+            "node": "Merge Analysis Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Machine Health Analysis": {
+      "main": [
+        [
+          {
+            "node": "Merge Analysis Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Schedule Optimization": {
+      "main": [
+        [
+          {
+            "node": "Merge Analysis Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Analysis Results": {
+      "main": [
+        [
+          {
+            "node": "Format Final Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1,
+    "availableInMCP": false
+  },
+  "versionId": "5c97fe1f-427e-4628-9fbe-4991b4f64402",
+  "meta": {
+    "instanceId": "9e6c66daa0addba5631dc4ef285db1962f38d8ca7e519cbc6ba3a183fb32f0fb"
+  },
+  "id": "oJ4qXZ7iU6MoKFeA",
+  "tags": []
+}
